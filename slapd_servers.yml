@@ -1,0 +1,5 @@
+---
+- hosts: slapd_servers
+  sudo: yes
+  roles:
+    - slapd

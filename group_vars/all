@@ -1,0 +1,12 @@
+---
+# debconf
+admin_pw: passw0rd
+rootdn_pw: passw0rd
+domain: example.org
+organization: example.org
+# BDB, HDB, MDB
+backend: MDB
+
+# cn=config
+log_level: 256
+suffix: dc=example,dc=org

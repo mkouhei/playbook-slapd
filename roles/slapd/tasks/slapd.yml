@@ -1,0 +1,120 @@
+---
+# cf. Cannot remove a schema using OpenLDAP dynamic configuration
+#  - http://www.openldap.org/lists/openldap-technical/201204/msg00245.html
+#  - http://www.openldap.org/lists/openldap-technical/201204/msg00248.html
+
+- name: configuration debconf
+  debconf:
+    name=slapd
+    question={{ item.question }}
+    value={{ item.value }}
+    vtype={{ item.vtype }}
+  with_items:
+    - { question: 'slapd/password2', value: "{{ admin_pw }}", vtype: 'password' }
+    - { question: 'slapd/password1', value: "{{ admin_pw }}", vtype: 'password' }
+    - { question: 'slapd/internal/adminpw', value: "{{ rootdn_pw }}", vtype: 'password' }
+    - { question: 'slapd/internal/generated_adminpw', value: "{{ rootdn_pw }}", vtype: 'password' }
+    - { question: 'slapd/domain', value: "{{ domain }}", vtype: 'string' }
+    - { question: 'shared/organization', value: "{{ organization }}", vtype: 'string' }
+    - { question: 'slapd/invalid_config', value: 'true', vtype: 'boolean' }
+    - { question: 'slapd/allow_ldap_v2', value: 'false', vtype: 'boolean' }
+    - { question: 'slapd/dump_database_destdir', value: '/var/backups/slapd-VERSION', vtype: 'string' }
+    - { question: 'slapd/move_old_database', value: 'true', vtype: 'boolean' }
+    - { question: 'slapd/purge_database', value: 'true', vtype: 'boolean' }
+    - { question: 'slapd/backend', value: "{{ backend }}", vtype: 'select' }
+    - { question: 'slapd/no_configuration', value: 'false', vtype: 'boolean' }
+
+- name: be sure packages are installed
+  apt:
+    pkg={{ item }}
+    state=latest
+  with_items:
+    - slapd
+    - python-ldap
+    - ldap-utils
+    - ldapvi
+
+- name: be sure configured slapd parameters
+  ldap_attr:
+    dn=cn=config
+    name={{ item.key }}
+    values={{ item.value }}
+  with_dict:
+    olcLogLevel: "{{ log_level }}"
+
+- name: be sure memberof module
+  ldap_entry:
+    dn=cn=module{1},cn=config
+    objectClass=olcModuleList
+    olcModulePath=/usr/lib/ldap
+    olcModuleLoad=memberof.la
+
+# openssh-ldappubkey
+# https://openssh-lpk.googlecode.com/svn/trunk/schemas/openssh-lpk_openldap.schema
+- name: openssh-ldappubkey schema entry
+  ldap_entry:
+    dn: cn={4}openssh-lpk,cn=schema,cn=config
+    objectClass: olcSchemaConfig
+    cn: openssh-lpk
+    olcAttributeTypes: "{0}( 1.3.6.1.4.1.24552.500.1.1.1.13 NAME 'sshPublicKey'
+                        DESC 'MANDATORY: OpenSSH Public key'
+                        EQUALITY octetStringMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )"
+    olcObjectClasses: "{0}( 1.3.6.1.4.1.24552.500.1.1.2.0 NAME 'ldapPublicKey'
+                       DESC 'MANDATORY: OpenSSH LPK objectclass'
+                       SUP top AUXILIARY MAY ( sshPublicKey $  uid ) )"
+
+- name: be sure configured slapd parameters
+  ldap_attr:
+    dn: "olcDatabase={1}{{ backend | lower }},cn=config"
+    name: olcAccess
+    state: absent
+    values:
+      - '{0}to attrs=userPassword by self write by anonymous auth by * none'
+      - '{1}to attrs=shadowLastChange by self write by * read'
+      - '{2}to * by * read'
+
+- name: overlay memberof
+  ldap_entry:
+    dn: "olcOverlay={0}memberof,olcDatabase={1}{{ backend | lower }},cn=config"
+    objectClass: olcConfig
+    objectClass: olcOverlayConfig
+    objectClass: olcMemberOf
+    olcOverlay: memberof
+    olcMemberOfDangling: ignore
+    olcMemberOfRefInt: "TRUE"
+    olcMemberOfGroupOC: groupOfNames
+    
+- name: be sure configured slapd parameters
+  ldap_attr:
+    dn: "olcDatabase={1}{{ backend | lower }},cn=config"
+    name: olcAccess
+    state: present
+    values:
+      - '{0}to attrs=userPassword,shadowLastChange
+         by self write
+         by anonymous auth
+         by dn="cn=admin,{{ suffix }}" write
+         by * none'
+      - '{1}to dn.base=""
+         by * read'
+      - '{2}to *
+         by dn="cn=admin,{{ suffix }}" write
+         by * read'
+      - '{3}to dn.subtree="{{ suffix }}"
+         by self read
+         by * read'
+      - '{4}to *
+         by * none'
+
+- name: orgnizational unit
+  ldap_entry:
+    dn: "ou={{ item }},{{ suffix }}"
+    objectClass: top
+    objectClass: organizationalUnit
+    ou: "{{ item }}"
+    bind_dn: "cn=admin,{{ suffix }}"
+    bind_pw: "{{ admin_pw }}"
+    state: present
+  with_items:
+    - People
+    - Groups

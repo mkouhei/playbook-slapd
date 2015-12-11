@@ -1,0 +1,4 @@
+---
+# roles/slapd/tasks/main.yml
+
+- include: slapd.yml
