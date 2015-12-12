@@ -76,9 +76,10 @@
 - name: overlay memberof
   ldap_entry:
     dn: "olcOverlay={0}memberof,olcDatabase={1}{{ backend | lower }},cn=config"
-    objectClass: olcConfig
-    objectClass: olcOverlayConfig
-    objectClass: olcMemberOf
+    objectClass:
+      - olcConfig
+      - olcOverlayConfig
+      - olcMemberOf
     olcOverlay: memberof
     olcMemberOfDangling: ignore
     olcMemberOfRefInt: "TRUE"
@@ -109,7 +110,6 @@
 - name: orgnizational unit
   ldap_entry:
     dn: "ou={{ item }},{{ suffix }}"
-    objectClass: top
     objectClass: organizationalUnit
     ou: "{{ item }}"
     bind_dn: "cn=admin,{{ suffix }}"
