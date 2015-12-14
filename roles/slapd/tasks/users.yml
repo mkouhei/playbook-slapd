@@ -1,0 +1,46 @@
+---
+
+# entry
+# innitialize only.
+# The attributes does not changes when the attributes have changed.
+# cf. userPassword, sshPublicKey, etc.
+- name: user entries
+  ldap_entry:
+    dn: "uid={{ item.uid }},ou=People,{{ suffix }}"
+    objectClass:
+      - inetOrgPerson
+      - posixAccount
+      - ldapPublicKey
+    uidNumber: "{{ item.uidNumber }}"
+    gidNumber: "{{ item.gidNumber }}"
+    sn: "{{ item.sn }}"
+    cn: "{{ item.cn }}"
+    userPassword: "{{ item.password }}"
+    homeDirectory: "/home/{{ item.uid }}"
+    mail: "{{ item.uid }}@{{ domain }}"
+    sshPublicKey: "{{ item.sshPublicKey }}"
+    uid: "{{ item.uid }}"
+    bind_dn: "cn=admin,{{ suffix }}"
+    bind_pw: "{{ admin_pw }}"
+    state: present
+  with_items:
+    - { uid: 'user01', cn: 'taro_yamada', password: '{SSHA}qlkQl5tkHOKqTIu0MiwUlhWlf9TfrQce', uidNumber: '10001', gidNumber: '1000', sn: 'yamada', sshPublicKey: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejX user01@vm01' }
+    - { uid: 'user02', cn: 'ichiro_suzuki', password: '{SSHA}qlkQl5tkHOKqTIu0MiwUlhWlf9TfrQce', uidNumber: '10002', gidNumber: 1000, sn: 'suzuki', sshPublicKey: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejX user02@vm02' }
+    - { uid: 'user03', cn: 'haruo_sato', password: '{SSHA}qlkQl5tkHOKqTIu0MiwUlhWlf9TfrQce', uidNumber: '10003', gidNumber: 1000, sn: 'sato', sshPublicKey: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejX user03@vm03' }
+    - { uid: 'user04', cn: 'haruo_sato', password: '{SSHA}qlkQl5tkHOKqTIu0MiwUlhWlf9TfrQce', uidNumber: '10004', gidNumber: 1000, sn: 'sato', sshPublicKey: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejX user04@vm04' }
+    - { uid: 'user05', cn: 'haruo_sato', password: '{SSHA}qlkQl5tkHOKqTIu0MiwUlhWlf9TfrQce', uidNumber: '10005', gidNumber: 1000, sn: 'sato', sshPublicKey: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejX user05@vm05' }
+
+# attributes
+# The entry can has multiple sshPublicKey.
+# To append is using ``present``. To replace is using ``exact``.
+- name: user attributes
+  ldap_attr:
+    dn: "uid={{ item.key }},ou=People,{{ suffix }}"
+    name: sshPublicKey
+    values: "{{ item.value }}"
+    bind_dn: "cn=admin,{{ suffix }}"
+    bind_pw: "{{ admin_pw }}"    
+    state: present
+  with_dict:
+    user01: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejY user01@vm01'
+    user03: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCrMQOAP3o58yl96HjEsheDAO/qgQ/mLVJK7DW+VFbJ9dGJpJfB4CBXPoT9bfSn4y6dotqjBA1eDbpDyzrhLkIe1MWZrRjkFbzAtB54ydKSU48URsb+XtGnN6kKKpipolQRvr3CRV7Yu2ELJDq+9Oz1gILK4nc1W/iaORVO/tZRPA0vdQwP0qkUf//neUmXXbSxOSm+ekQvZI9KfJ2tWxe+mVSFt+PcC2P4A/bW9dCNplqZdFTMQxLYFpl5ZOz3fwWcy34Shcb5nSZbjpKZdNrpuUCLwq2FMxorupko8kf4RmvMYO3G6p6OqpoIt6raB8DDJ+v/f6jdgPA31HK0sejY user03@vm03'

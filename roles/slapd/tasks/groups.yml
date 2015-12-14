@@ -1,0 +1,66 @@
+---
+
+- name: group entries
+  ldap_entry:
+    dn: 'cn={{ item }},ou=Groups,{{ suffix }}'
+    objectClass: groupOfNames
+    cn: '{{ item }}'
+    member: cn=noexist
+    bind_dn: "cn=admin,{{ suffix }}"
+    bind_pw: "{{ admin_pw }}"
+    state: present
+  with_items:
+    - admin
+    - devel
+    - support
+    - sales
+
+- name: admin group members
+  ldap_attr:
+    dn: 'cn=admin,ou=Groups,{{ suffix }}'
+    name: member
+    values: 'uid={{ item }},ou=People,{{ suffix }}'
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+    state: present
+  with_items:
+    - user01
+    - user02
+  tags: hoge
+
+- name: devel group members
+  ldap_attr:
+    dn: 'cn=devel,ou=Groups,{{ suffix }}'
+    name: member
+    values: 'uid={{ item }},ou=People,{{ suffix }}'
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+    state: present
+  with_items:
+    - user02
+    - user03
+    - user04
+
+- name: support group members
+  ldap_attr:
+    dn: 'cn=support,ou=Groups,{{ suffix }}'
+    name: member
+    values: 'uid={{ item }},ou=People,{{ suffix }}'    
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+    state: present
+  with_items:
+    - user03
+    - user05
+
+- name: sales group members
+  ldap_attr:
+    dn: 'cn=sales,ou=Groups,{{ suffix }}'
+    name: member
+    values: 'uid={{ item }},ou=People,{{ suffix }}'    
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+    state: present
+  with_items:
+    - user01
+    - user04
