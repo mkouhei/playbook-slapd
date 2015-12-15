@@ -1,2 +1,3 @@
 library/
 .venv/
+roles/*/vars/*

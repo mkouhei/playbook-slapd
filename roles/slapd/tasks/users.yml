@@ -41,5 +41,5 @@
     values: "{{ item.sshPublicKey }}"
     bind_dn: "cn=admin,{{ suffix }}"
     bind_pw: "{{ admin_pw }}"    
-    state: present
+    state: exact
   with_items: pubkeys
