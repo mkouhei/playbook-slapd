@@ -1,0 +1,9 @@
+---
+
+- include: syncprov.yml
+
+- include: ou.yml
+
+- include: users.yml
+
+- include: groups.yml

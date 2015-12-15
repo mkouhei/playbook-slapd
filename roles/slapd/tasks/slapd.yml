@@ -106,15 +106,3 @@
          by * read'
       - '{4}to *
          by * none'
-
-- name: orgnizational unit
-  ldap_entry:
-    dn: "ou={{ item }},{{ suffix }}"
-    objectClass: organizationalUnit
-    ou: "{{ item }}"
-    bind_dn: "cn=admin,{{ suffix }}"
-    bind_pw: "{{ admin_pw }}"
-    state: present
-  with_items:
-    - People
-    - Groups

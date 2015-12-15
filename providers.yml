@@ -1,5 +1,6 @@
 ---
-- hosts: slapd_servers
+- hosts: providers
   sudo: yes
   roles:
     - slapd
+    - provider

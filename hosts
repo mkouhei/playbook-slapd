@@ -1,2 +1,6 @@
-[slapd_servers]
+[slapd_servers:children]
+providers
+#consumers
+
+[providers]
 localhost   ansible_connection=local

@@ -1,0 +1,8 @@
+---
+
+- name: be sure syncprov module
+  ldap_entry:
+    dn=cn=module{2},cn=config
+    objectClass=olcModuleList
+    olcModulePath=/usr/lib/ldap
+    olcModuleLoad=syncprov.la

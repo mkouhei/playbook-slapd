@@ -1,2 +1,5 @@
 ---
-- include: slapd_servers.yml
+
+- include: providers.yml
+
+#- include: consumers.yml

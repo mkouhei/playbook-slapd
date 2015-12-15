@@ -2,7 +2,3 @@
 # roles/slapd/tasks/main.yml
 
 - include: slapd.yml
-
-- include: users.yml
-
-- include: groups.yml
