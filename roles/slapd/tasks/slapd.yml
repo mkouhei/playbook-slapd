@@ -31,8 +31,6 @@
   with_items:
     - slapd
     - python-ldap
-    - ldap-utils
-    - ldapvi
 
 - name: be sure configured slapd parameters
   ldap_attr:
