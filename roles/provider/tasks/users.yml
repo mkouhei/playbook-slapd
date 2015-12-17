@@ -5,7 +5,7 @@
 # The attributes does not changes when the attributes have changed.
 # cf. userPassword, sshPublicKey, etc.
 
-- include_vars: users.yml
+- include_csv: src=files/users.csv
 
 - name: user entries
   ldap_entry:
@@ -30,7 +30,7 @@
 
 # attributes
 
-- include_vars: pubkeys.yml
+- include_csv: src=files/pubkeys.csv
 
 # The entry can has multiple sshPublicKey.
 # To append is using ``present``. To replace is using ``exact``.

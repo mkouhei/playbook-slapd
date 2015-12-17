@@ -26,7 +26,6 @@
   with_items:
     - user01
     - user02
-  tags: hoge
 
 - name: devel group members
   ldap_attr:
