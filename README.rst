@@ -26,14 +26,21 @@ Prepare
    $ . .venv/bin/activate
    (venv)$ pip install ansible
 
-3. hg clone ansible-ldap
-::
+3. Install dependency roles
 
-   (venv)$ install -d library
-   (venv)$ cd library
-   (venv)$ hg clone https://bitbucket.org/psagers/ansible-ldap
-   (venv)$ ln -s ansible-ldap/modules/ldap_* .
-   (venv)$ cd -
+   1. Install ansible-ldap::
+
+        (venv)$ install -d library
+        (venv)$ cd library
+        (venv)$ hg clone https://bitbucket.org/psagers/ansible-ldap
+        (venv)$ ln -s ansible-ldap/modules/ldap_* .
+        (venv)$ cd -
+
+
+   2. Install mkouhei.include_csv::
+
+        (venv)$ ansible-galaxy install -p ./library mkouhei.include_csv
+
 
 4. edit parameters
 
