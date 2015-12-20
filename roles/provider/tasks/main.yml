@@ -7,3 +7,5 @@
 - include: users.yml
 
 - include: groups.yml
+
+- include: sudo.yml

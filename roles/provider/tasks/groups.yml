@@ -10,22 +10,9 @@
     bind_pw: "{{ admin_pw }}"
     state: present
   with_items:
-    - admin
     - devel
     - support
     - sales
-
-- name: admin group members
-  ldap_attr:
-    dn: 'cn=admin,ou=Groups,{{ suffix }}'
-    name: member
-    values: 'uid={{ item }},ou=People,{{ suffix }}'
-    bind_dn: 'cn=admin,{{ suffix }}'
-    bind_pw: '{{ admin_pw }}'
-    state: present
-  with_items:
-    - user01
-    - user02
 
 - name: devel group members
   ldap_attr:

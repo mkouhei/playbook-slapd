@@ -1,0 +1,63 @@
+---
+
+# see also sudoers.ldap(5) from sudo-ldap
+
+- name: be sure sudo defaults setting
+  ldap_entry:
+    dn: "cn=defaults,ou=SUDOers,{{ suffix }}"
+    objectClass: top
+    objectClass: sudoRole
+    cn: defaults
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'    
+    sudoOption:
+      - "!root_sudo"
+      - ignore_local_sudores
+      - timestamp_timeout=0
+
+- name: be sure sudo group is present
+  ldap_entry:
+    dn: "cn=%wheel,ou=SUDOers,{{ suffix }}"
+    objectClass: top
+    objectClass: sudoRole
+    cn: "%wheel"
+    sudoUser: "%wheel"
+    sudoHost: ALL
+    sudoCommand: ALL
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+
+- name: group entries
+  ldap_entry:
+    dn: 'cn=wheel,ou=Groups,{{ suffix }}'
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    gidNumber: '1000'
+    cn: wheel
+    memberUid: noexist
+    bind_dn: "cn=admin,{{ suffix }}"
+    bind_pw: "{{ admin_pw }}"
+    state: present
+
+- name: wheel group members
+  ldap_attr:
+    dn: 'cn=wheel,ou=Groups,{{ suffix }}'
+    name: memberUid
+    values: '{{ item }}'
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+    state: present
+  with_items:
+    - user01
+    - user02
+
+- name: wheel group members are absent
+  ldap_attr:
+    dn: 'cn=wheel,ou=Groups,{{ suffix }}'
+    name: memberUid
+    values: '{{ item }}'
+    bind_dn: 'cn=admin,{{ suffix }}'
+    bind_pw: '{{ admin_pw }}'
+    state: absent
+  with_items:
+    - noexist
