@@ -37,6 +37,7 @@
     dn=cn=config
     name={{ item.key }}
     values={{ item.value }}
+    state=exact
   with_dict:
     olcLogLevel: "{{ log_level }}"
 
