@@ -1,0 +1,8 @@
+---
+
+- src: mkouhei.include_csv
+
+- src: https://bitbucket.org/mkouhei/ansible-ldap
+  name: ldap
+  scm: hg
+  version: for-ansible-galaxy
