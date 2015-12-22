@@ -27,19 +27,12 @@ Prepare
    (venv)$ pip install ansible
 
 3. Install dependency roles
+::
 
-   1. Install ansible-ldap::
-
-        (venv)$ install -d library
-        (venv)$ cd library
-        (venv)$ hg clone https://bitbucket.org/psagers/ansible-ldap
-        (venv)$ ln -s ansible-ldap/modules/ldap_* .
-        (venv)$ cd -
-
-
-   2. Install mkouhei.include_csv::
-
-        (venv)$ ansible-galaxy install -p ./library mkouhei.include_csv
+   (venv)$ install -d library
+   (venv)$ cd library
+   (venv)$ ansible-galaxy install -p library -r requirements.yml --no-deps
+   (venv)$ cd -
 
 
 4. edit parameters
@@ -48,6 +41,7 @@ Prepare
    * group_vars/all
 
 5. run `ansible-playbook`.
-   
+::
+
    (venv)$ ansible-playbook -i hosts site.yml -K
 
