@@ -5,10 +5,10 @@
 
 - name: configuration debconf
   debconf:
-    name=slapd
-    question={{ item.question }}
-    value={{ item.value }}
-    vtype={{ item.vtype }}
+    name: slapd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
   with_items:
     - { question: 'slapd/password2', value: "{{ admin_pw }}", vtype: 'password' }
     - { question: 'slapd/password1', value: "{{ admin_pw }}", vtype: 'password' }
@@ -26,27 +26,40 @@
 
 - name: be sure packages are installed
   apt:
-    pkg={{ item }}
-    state=latest
+    pkg: "{{ item }}"
+    state: latest
   with_items:
     - slapd
     - python-ldap
 
+#- name: be sure packages are install
+#  apt:
+#    pkg={{ item }}
+#    state=latest
+#  with_items:
+#    - libldap2-dev
+# 
+#- name: be sure python packages are installed
+#  pip:
+#    name={{ item }}
+#  with_items:
+#    - Python-LDAP
+
 - name: be sure configured slapd parameters
   ldap_attr:
-    dn=cn=config
-    name={{ item.key }}
-    values={{ item.value }}
-    state=exact
+    dn: cn=config
+    name: "{{ item.key }}"
+    values: "{{ item.value }}"
+    state: exact
   with_dict:
     olcLogLevel: "{{ log_level }}"
 
 - name: be sure memberof module
   ldap_entry:
-    dn=cn=module{1},cn=config
-    objectClass=olcModuleList
-    olcModulePath=/usr/lib/ldap
-    olcModuleLoad=memberof.la
+    dn: cn=module{1},cn=config
+    objectClass: olcModuleList
+    olcModulePath: /usr/lib/ldap
+    olcModuleLoad: memberof.la
 
 # openssh-ldappubkey
 # https://openssh-lpk.googlecode.com/svn/trunk/schemas/openssh-lpk_openldap.schema
