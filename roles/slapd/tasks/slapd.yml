@@ -75,16 +75,6 @@
                        DESC 'MANDATORY: OpenSSH LPK objectclass'
                        SUP top AUXILIARY MAY ( sshPublicKey $  uid ) )"
 
-- name: be sure configured slapd parameters
-  ldap_attr:
-    dn: "olcDatabase={1}{{ backend | lower }},cn=config"
-    name: olcAccess
-    state: absent
-    values:
-      - '{0}to attrs=userPassword by self write by anonymous auth by * none'
-      - '{1}to attrs=shadowLastChange by self write by * read'
-      - '{2}to * by * read'
-
 - name: overlay memberof
   ldap_entry:
     dn: "olcOverlay={0}memberof,olcDatabase={1}{{ backend | lower }},cn=config"
@@ -96,12 +86,12 @@
     olcMemberOfDangling: ignore
     olcMemberOfRefInt: "TRUE"
     olcMemberOfGroupOC: groupOfNames
-    
+
 - name: be sure configured slapd parameters
   ldap_attr:
     dn: "olcDatabase={1}{{ backend | lower }},cn=config"
     name: olcAccess
-    state: present
+    state: exact
     values:
       - '{0}to attrs=userPassword,shadowLastChange
          by self write
